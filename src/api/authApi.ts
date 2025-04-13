@@ -3,7 +3,6 @@ import {AuthResponse, UserInfoResponse} from "../types/authApi/responses.ts";
 import {RegisterUserRequest, LoginUserRequest} from "../types/authApi/requests.ts";
 import { setCredentials } from "../store/slices/authSlice.ts";
 import {Dispatch} from "@reduxjs/toolkit";
-import {RootState} from "../store";
 
 
 const updateAccess = async (
@@ -12,7 +11,8 @@ const updateAccess = async (
 ) => {
     try {
         const {data} = await queryFulfilled;
-        dispatch(setCredentials({accessToken: data.access_token}));
+        localStorage.setItem("access_token", data.access_token);
+        dispatch(setCredentials({id: data.id, role: data.role}));
     } catch (error) {
         console.log(error);
     }
@@ -24,9 +24,9 @@ const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1',
         credentials: 'include',
-        prepareHeaders: (headers, {getState, endpoint}) => {
+        prepareHeaders: (headers, {endpoint}) => {
             if (endpoint === 'refreshToken' || endpoint === 'getProfile') {
-                const token = (getState() as RootState).authSlice.accessToken;
+                const token = localStorage.getItem("access_token");
                 if (token) {
                     headers.set('Authorization', `Bearer ${token}`);
                 }

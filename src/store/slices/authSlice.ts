@@ -1,15 +1,18 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface AuthState {
-    accessToken: string | null;
+    id: string | null;
+    role: 'Admin' | 'User' | null;
 }
 
 const initialState: AuthState = {
-    accessToken: null,
+    id: null,
+    role: null
 }
 
 interface CredentialsPayload {
-    accessToken: string;
+    id: string;
+    role: 'Admin' | 'User';
 }
 
 export const authSlice = createSlice({
@@ -17,7 +20,8 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         setCredentials(state, action: PayloadAction<CredentialsPayload>) {
-            state.accessToken = action.payload.accessToken;
+            state.id = action.payload.id;
+            state.role = action.payload.role;
         }
     }
 });

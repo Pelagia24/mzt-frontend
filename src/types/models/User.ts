@@ -1,10 +1,11 @@
 interface User {
+    id: string;
     email: string;
     age: number;
     birthdate: string;
     city: string;
     employment: string;
-    is_business_owner: string;
+    is_business_owner: 'yes' | 'no' | 'other';
     month_income: number;
     name: string;
     phone_number: string;

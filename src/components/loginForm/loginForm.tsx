@@ -21,7 +21,7 @@ export const LoginForm = () => {
     }, [isSuccess]);
 
     const isEmailValid = (email: string) => /^\S+@\S+\.\S+$/.test(email);
-    const isPasswordValid = (password: string) => password.length > 8;
+    const isPasswordValid = (password: string) => password.length >= 8;
 
     return (
         <div className={authFormStyles.container}>

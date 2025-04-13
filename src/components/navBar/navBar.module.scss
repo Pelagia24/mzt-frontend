@@ -2,3 +2,10 @@
   background-color: var(--primary);
   color: #fff;
 }
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}

@@ -1,7 +1,9 @@
 import User from "../models/User.ts";
 
 export interface AuthResponse {
-    access_token: 'string';
+    access_token: string;
+    id: string;
+    role: 'Admin' | 'User';
 }
 
 export interface LogoutResponse {

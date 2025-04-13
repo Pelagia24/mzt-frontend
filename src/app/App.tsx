@@ -5,6 +5,7 @@ import {RegistrationPage} from '../pages/registrationPage/registrationPage';
 import MainPage from "../pages/mainPage/MainPage.tsx";
 import ProfilePage from "../pages/profilePage/ProfilePage.tsx";
 import PrivateRoute from "../components/privateRoute/PrivateRoute.tsx";
+import AdminPage from "../pages/adminPage/AdminPage.tsx";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                         <Route path='/profile' element={<ProfilePage/>} />
                     </Route>
                     <Route path='/' element={<MainPage/>}/>
+                    <Route path='/admin' element={<AdminPage/>}/>
                 </Routes>
             </Router>
         </PrimeReactProvider>
