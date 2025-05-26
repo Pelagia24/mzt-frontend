@@ -120,7 +120,7 @@ export default function AdminTable() {
                 type="text"
                 value={options.value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    options.editorCallback!(sanitizeDigits(e.target.value))
+                    options.editorCallback!(parseInt(sanitizeDigits(e.target.value)))
                 }
             />
         );

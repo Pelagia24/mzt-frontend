@@ -14,6 +14,9 @@ const updateAccess = async (
         localStorage.setItem("access_token", data.access_token);
         dispatch(setCredentials({id: data.id, role: data.role}));
     } catch (error) {
+        if (localStorage.getItem("access_token")) {
+            localStorage.removeItem("access_token");
+        }
         console.log(error);
     }
 };

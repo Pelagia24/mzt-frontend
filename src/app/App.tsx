@@ -6,6 +6,7 @@ import MainPage from "../pages/mainPage/MainPage.tsx";
 import ProfilePage from "../pages/profilePage/ProfilePage.tsx";
 import PrivateRoute from "../components/privateRoute/PrivateRoute.tsx";
 import AdminPage from "../pages/adminPage/AdminPage.tsx";
+import CoursePage from "../pages/coursePage/CoursePage.tsx";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route path='/signup' element={<RegistrationPage/>}/>
                     <Route element={<PrivateRoute />}>
                         <Route path='/profile' element={<ProfilePage/>} />
+                        <Route path='/course/:courseId' element={<CoursePage/>}/>
                     </Route>
                     <Route path='/' element={<MainPage/>}/>
                     <Route path='/admin' element={<AdminPage/>}/>

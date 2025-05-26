@@ -2,9 +2,21 @@ import {Button} from "primereact/button";
 import {classNames} from "primereact/utils";
 import styles from "./ProfileInfo.module.scss";
 import {useGetProfileQuery} from "../../api/authApi.ts";
+import {useGetCoursesByUserIdQuery} from "../../api/courseApi.ts";
+import {NavLink} from "react-router-dom";
 
 const ProfileInfo = () => {
     const {data, isLoading, isError} = useGetProfileQuery();
+    const {data: coursesData} = useGetCoursesByUserIdQuery();
+
+
+    const processMyCourses = () => {
+        if (!coursesData || coursesData.courses.length === 0) {
+            return <p>У вас пока что нет курсов</p>;
+        }
+        return coursesData.courses.map((course) =>
+            (<NavLink className={styles.link} to={`/course/${course.course_id}`}>{course.name}</NavLink>));
+    }
 
 
     if (isLoading) {
@@ -22,6 +34,10 @@ const ProfileInfo = () => {
     return data ? (<div className={classNames("surface-card border-round m-4 p-4 shadow-2", styles.wrapper)}>
         <div className="font-medium text-3xl text-900 mb-3">Моя информация</div>
         <ul className="list-none p-0 m-0">
+            <li className="flex align-items-center py-3 px-2 border-top-1  flex-wrap">
+                <div className="text-500 w-6 md:w-2 font-bold">Мои курсы</div>
+                <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{processMyCourses()}</div>
+            </li>
             <li className="flex align-items-center py-3 px-2 border-top-1  flex-wrap">
                 <div className="text-500 w-6 md:w-2 font-bold">ФИО</div>
                 <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data!.user.name}</div>
