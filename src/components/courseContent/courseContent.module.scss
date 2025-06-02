@@ -35,6 +35,7 @@
 }
 
 .lessonHeading {
+  margin-top: 1rem;
   text-align: center;
   font-size: 2rem;
 }
@@ -52,4 +53,16 @@
   border-radius: 0.5rem;
   width: 50rem;
   height: 28.125rem;
+}
+
+.event {
+  border: 1px solid var(--primary-border-color);
+  width: 18rem;
+}
+
+.events {
+  margin: 0 auto;
+  margin-top: 2rem;
+  max-width: 80%;
+  height: 15rem;
 }

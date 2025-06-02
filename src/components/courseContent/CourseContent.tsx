@@ -26,8 +26,8 @@ const CourseContent = ({courseId}: courseContentProps) => {
                 </div>
             ))}
         </aside>
-
-        <LessonInfo lesson={data && data.lessons.filter(lesson => lesson.lesson_id === activeLesson)[0]}/>
+        <LessonInfo courseId={courseId}
+                    lesson={data && data.lessons.filter(lesson => lesson.lesson_id === activeLesson)[0]}/>
     </main>
 }
 

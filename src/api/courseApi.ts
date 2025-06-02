@@ -1,6 +1,16 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {Lesson} from "../types/models/Lesson.ts";
+import Event from "../types/models/Event.ts";
 
+interface Course {
+    course_id: string;
+    name: string;
+    description: string;
+    price: {
+        amount: number;
+        currency_code: string;
+    };
+}
 
 const courseApi = createApi({
     reducerPath: 'coursesApi',
@@ -17,7 +27,7 @@ const courseApi = createApi({
         }
     }),
     endpoints: builder =>  ({
-        getCourses: builder.query<{ courses: { course_id: string, name: string, description: string }[] }, void>({
+        getCourses: builder.query<{ courses: Course[] }, void>({
             query: () => '/courses/',
             providesTags: ['Courses']
         }),
@@ -25,7 +35,7 @@ const courseApi = createApi({
             query: (courseId) => `/courses/${courseId}/lessons/`,
             providesTags: ['Lessons']
         }),
-        getCoursesByUserId: builder.query<{ courses: { course_id: string, name: string, description: string }[] }, void>({
+        getCoursesByUserId: builder.query<{ courses: Course[] }, void>({
             query: () => '/users/me/courses',
             providesTags: ['UserCourses']
         }),
@@ -35,6 +45,12 @@ const courseApi = createApi({
                 method: 'POST'
             }),
             invalidatesTags: ['UserCourses']
+        }),
+        getEvents: builder.query<{ events: Event[] }, string>({
+            query: (id) => ({
+                url: `/courses/${id}/events/`,
+                method: 'GET'
+            })
         })
     })
 })
@@ -43,6 +59,7 @@ export default courseApi;
 export const {
     useGetCoursesQuery,
     useGetLessonsQuery,
+    useGetEventsQuery,
     useGetCoursesByUserIdQuery,
     useBuyCourseMutation
 } = courseApi;

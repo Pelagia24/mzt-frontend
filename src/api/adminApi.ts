@@ -3,7 +3,7 @@ import User from "../types/models/User.ts";
 
 const adminApi = createApi({
     reducerPath: 'admin',
-    tagTypes: ['Users'],
+    tagTypes: ['Users', 'Transactions'],
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1',
         credentials: 'include',
@@ -34,6 +34,13 @@ const adminApi = createApi({
                 body: user
             }),
             invalidatesTags: ['Users']
+        }),
+        getUserTransactions: builder.query<unknown, string>({
+            query: (userId) => ({
+                url: `/users/${userId}/transactions`,
+                method: 'GET'
+            }),
+            providesTags: ['Transactions']
         })
     })
 })
@@ -41,6 +48,8 @@ const adminApi = createApi({
 export const {
     useGetUsersQuery,
     useDeleteUserMutation,
+    useGetUserTransactionsQuery,
     useUpdateUserMutation
 } = adminApi;
+
 export default adminApi;

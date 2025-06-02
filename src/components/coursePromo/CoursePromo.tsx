@@ -1,18 +1,22 @@
 import {Button} from "primereact/button";
 import CoursePromoProps from "./coursePromo.props.ts";
-import {useGetCoursesByUserIdQuery, useBuyCourseMutation} from "../../api/courseApi.ts";
+import {useGetCoursesQuery, useGetCoursesByUserIdQuery, useBuyCourseMutation} from "../../api/courseApi.ts";
 import {useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {useNavigate} from "react-router-dom";
 
 const CoursePromo = ({courseId, name}: CoursePromoProps) => {
-    const {data} = useGetCoursesByUserIdQuery();
+    const {data: coursesData} = useGetCoursesQuery();
+    const {data: userCoursesData} = useGetCoursesByUserIdQuery();
     const navigate = useNavigate();
     const [visible, setVisible] = useState(false);
     const [buyCourse] = useBuyCourseMutation();
 
+    const course = coursesData?.courses.find(c => c.course_id === courseId);
+
     const courseActionHandler = () => {
-        if (data!.courses.filter(course => courseId == course.course_id).length !== 0) {
+        const hasAccess = userCoursesData?.courses.some(course => courseId === course.course_id);
+        if (hasAccess) {
             navigate(`/course/${courseId}`);
         } else {
             setVisible(true);
@@ -34,7 +38,9 @@ const CoursePromo = ({courseId, name}: CoursePromoProps) => {
                 <div className="text-900 font-medium text-xl mb-2">{name}</div>
                 <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300"/>
                 <div className="flex align-items-center">
-                    <span className="font-bold text-2xl text-900">35000₽</span>
+                    <span className="font-bold text-2xl text-900">
+                        {course ? `${course.price.amount}${course.price.currency_code === 'RUB' ? '₽' : course.price.currency_code}` : 'Загрузка...'}
+                    </span>
                     <span className="ml-2 font-medium text-600">в месяц</span>
                 </div>
                 <hr className="my-3 mx-0 border-top-1 border-bottom-none border-300"/>

@@ -1,13 +1,14 @@
-import React from 'react';
-import { DataTable, DataTableRowEditCompleteEvent } from 'primereact/datatable';
-import { Column, ColumnEditorOptions } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
-import { Calendar } from 'primereact/calendar';
-import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { Button } from 'primereact/button';
+import React, {useState} from 'react';
+import {DataTable, DataTableRowEditCompleteEvent} from 'primereact/datatable';
+import {Column, ColumnEditorOptions} from 'primereact/column';
+import {InputText} from 'primereact/inputtext';
+import {Calendar} from 'primereact/calendar';
+import {Dropdown, DropdownChangeEvent} from 'primereact/dropdown';
+import {Button} from 'primereact/button';
 import styles from './adminTableStyles.module.scss';
 import User from '../../types/models/User.ts';
 import {useDeleteUserMutation, useGetUsersQuery, useUpdateUserMutation} from "../../api/adminApi.ts";
+import TransactionTable from "../transactionTable/TransactionTable.tsx";
 
 /**
  * Вспомогательные функции
@@ -62,12 +63,14 @@ const validateUser = (user: User): boolean => {
 
 export default function AdminTable() {
     const {data: usersFromServer, isLoading} = useGetUsersQuery();
+    const [visible, setVisible] = useState(false);
+    const [userId, setUserId] = useState<string>(null);
     const [deleteUser] = useDeleteUserMutation();
     const [updateUser] = useUpdateUserMutation();
 
     // Обработчик завершения редактирования строки
     const onRowEditComplete = (e: DataTableRowEditCompleteEvent) => {
-        const { newData } = e;
+        const {newData} = e;
         // Пересчитываем возраст, если изменена дата рождения
         if (newData.birthdate) {
             newData.age = computeAge(newData.birthdate as string);
@@ -143,9 +146,9 @@ export default function AdminTable() {
             <Dropdown
                 value={options.value}
                 options={[
-                    { label: 'Да', value: 'yes' },
-                    { label: 'Нет', value: 'no' },
-                    { label: 'Другое', value: 'other' }
+                    {label: 'Да', value: 'yes'},
+                    {label: 'Нет', value: 'no'},
+                    {label: 'Другое', value: 'other'}
                 ]}
                 onChange={(e: DropdownChangeEvent) =>
                     options.editorCallback!(e.value)
@@ -180,7 +183,7 @@ export default function AdminTable() {
                 editMode="row"
                 dataKey="email" // email используется как уникальный идентификатор и не редактируется
                 onRowEditComplete={onRowEditComplete}
-                tableStyle={{ minWidth: '50rem' }}
+                tableStyle={{minWidth: '50rem'}}
             >
                 <Column field="email" header="Email"></Column>
                 <Column field="name" header="ФИО" editor={(options) => textEditor(options)}></Column>
@@ -193,7 +196,8 @@ export default function AdminTable() {
                 ></Column>
                 <Column field="phone_number" header="Телефон" editor={(options) => phoneEditor(options)}></Column>
                 <Column field="city" header="Город" editor={(options) => textEditor(options)}></Column>
-                <Column field="employment" header="Сфера деятельности" editor={(options) => textEditor(options)}></Column>
+                <Column field="employment" header="Сфера деятельности"
+                        editor={(options) => textEditor(options)}></Column>
                 <Column
                     field="is_business_owner"
                     header="Владелец бизнеса"
@@ -203,7 +207,12 @@ export default function AdminTable() {
                 <Column field="position_at_work" header="Должность" editor={(options) => textEditor(options)}></Column>
                 <Column field="month_income" header="Доход" editor={(options) => incomeEditor(options)}></Column>
                 <Column field="telegram" header="Telegram" editor={(options) => telegramEditor(options)}></Column>
-                <Column rowEditor header="Редактировать" style={{ minWidth: '8rem' }}></Column>
+                <Column rowEditor header="Редактировать" style={{minWidth: '8rem'}}></Column>
+                <Column header={"Транзакции"}
+                        body={(user: User) => (<Button label="Транзакции" icon="pi pi-external-link" onClick={() => {
+                            setVisible(true);
+                            setUserId(user.id)
+                        }}/>)}/>
                 <Column
                     header="Удалить"
                     body={(user: User) => (
@@ -217,6 +226,7 @@ export default function AdminTable() {
                     )}
                 ></Column>
             </DataTable>
+            <TransactionTable userId={userId} visible={visible} setVisible={setVisible} />
         </div>
     );
 }
