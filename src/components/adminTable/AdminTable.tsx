@@ -64,7 +64,7 @@ const validateUser = (user: User): boolean => {
 export default function AdminTable() {
     const {data: usersFromServer, isLoading} = useGetUsersQuery();
     const [visible, setVisible] = useState(false);
-    const [userId, setUserId] = useState<string>(null);
+    const [userId, setUserId] = useState<string>('');
     const [deleteUser] = useDeleteUserMutation();
     const [updateUser] = useUpdateUserMutation();
 
