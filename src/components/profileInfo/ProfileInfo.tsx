@@ -1,6 +1,6 @@
 import {Button} from "primereact/button";
 import {classNames} from "primereact/utils";
-import styles from "./ProfileInfo.module.scss";
+import styles from "./profileInfo.module.scss";
 import {useGetProfileQuery} from "../../api/authApi.ts";
 import {useGetCoursesByUserIdQuery} from "../../api/courseApi.ts";
 import {NavLink} from "react-router-dom";

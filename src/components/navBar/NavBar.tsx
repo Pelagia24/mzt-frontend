@@ -2,7 +2,7 @@ import {Menubar} from 'primereact/menubar';
 import {Button} from "primereact/button";
 import {NavLink, useNavigate} from "react-router-dom";
 import {Avatar} from "primereact/avatar";
-import styles from "./NavBar.module.scss";
+import styles from "./navBar.module.scss";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {useRefreshTokenQuery} from "../../api/authApi.ts";
