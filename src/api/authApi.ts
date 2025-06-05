@@ -61,6 +61,28 @@ const authApi = createApi({
             invalidatesTags: ['Auth'],
 
         }),
+        logoutUser: builder.mutation<void, void>({
+            query: () => {
+                const token = localStorage.getItem("access_token");
+                return {
+                    url: '/auth/logout',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                };
+            },
+            async onQueryStarted(_, {dispatch, queryFulfilled}) {
+                try {
+                    await queryFulfilled;
+                    localStorage.removeItem('access_token');
+                    dispatch(setCredentials({id: '', role: 'User'}));
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                }
+            },
+            invalidatesTags: ['Auth'],
+        }),
         refreshToken: builder.query<AuthResponse, void>({
             query: () => ({
                 url: '/auth/refresh',
@@ -81,6 +103,7 @@ const authApi = createApi({
 export const {
     useRegisterUserMutation,
     useLoginUserMutation,
+    useLogoutUserMutation,
     useRefreshTokenQuery,
     useGetProfileQuery,
 } = authApi;

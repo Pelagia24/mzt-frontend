@@ -5,12 +5,13 @@ import {Avatar} from "primereact/avatar";
 import styles from "./navBar.module.scss";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {useRefreshTokenQuery} from "../../api/authApi.ts";
+import {useRefreshTokenQuery, useLogoutUserMutation} from "../../api/authApi.ts";
 
 const NavBar = () => {
     useRefreshTokenQuery();
     const navigate = useNavigate();
     const {role} = useSelector((state: RootState) => state.authSlice);
+    const [logout] = useLogoutUserMutation();
 
     const start = <NavLink to={'/'}><img alt="Логотип MZT" src="/logo.png" height="40"
                                          className="mr-2"></img></NavLink>;
@@ -22,6 +23,10 @@ const NavBar = () => {
             <NavLink to={'/profile'}><Avatar className={styles.badge} shape={"circle"} icon="pi pi-user"
                                              size="large"/></NavLink>
             {role === 'Admin' && <Button onClick={() => navigate('/admin')}>Админ-панель</Button>}
+            <Button onClick={() => {
+                logout();
+                navigate('/');
+            }} severity="danger" label="Выйти"/>
         </div>
     )
 

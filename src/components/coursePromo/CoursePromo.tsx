@@ -27,8 +27,12 @@ const CoursePromo = ({courseId, name}: CoursePromoProps) => {
         try {
             const data = await buyCourse(courseId).unwrap();
             window.location.href = data.url;
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            if (error.status === 401) {
+                navigate('/login');
+            } else {
+                console.error(error);
+            }
         }
     }
 
