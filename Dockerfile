@@ -1,17 +1,28 @@
-FROM node:20-alpine as build
+FROM node:20  as build
 
 WORKDIR /app
 
-COPY package*.json ./
+# Устанавливаем зависимости
+COPY package.json package-lock.json ./
+RUN npm ci
 
-RUN npm install
-
+# Копируем исходный код и собираем приложение
 COPY . .
-
 RUN npm run build
 
-FROM nginx:alpine
+# Шаг 2: Serve the React app
+FROM nginx:stable-alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+# Копируем конфиг файл nginx
+COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+WORKDIR /usr/share/nginx/html
+
+# Удаляем дефолтные nginx статику
+RUN rm -rf ./*
+
+# Копируем нашу статику из builder стадии
+COPY --from=build /app/dist .
+
+# Контейнер запускаеи nginx с global directives и daemon off
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
