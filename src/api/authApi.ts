@@ -4,6 +4,10 @@ import {RegisterUserRequest, LoginUserRequest} from "../types/authApi/requests.t
 import { setCredentials } from "../store/slices/authSlice.ts";
 import {Dispatch} from "@reduxjs/toolkit";
 
+const clearAuthData = () => {
+    localStorage.removeItem("access_token");
+    document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=mzt-study.ru;";
+};
 
 const updateAccess = async (
     queryFulfilled: Promise<{ data: AuthResponse }>,
@@ -13,11 +17,10 @@ const updateAccess = async (
         const {data} = await queryFulfilled;
         localStorage.setItem("access_token", data.access_token);
         dispatch(setCredentials({id: data.id, role: data.role}));
-    } catch (error) {
-        if (localStorage.getItem("access_token")) {
-            localStorage.removeItem("access_token");
-        }
-        console.log(error);
+    } catch (error: any) {
+        clearAuthData();
+        dispatch(setCredentials({id: '', role: 'User'}));
+        window.location.href = '/login';
     }
 };
 
@@ -54,10 +57,10 @@ const authApi = createApi({
                 body: credentials,
             }),
             async onQueryStarted(_, {dispatch, queryFulfilled}) {
+                clearAuthData();
                 await updateAccess(queryFulfilled, dispatch)
             },
             invalidatesTags: ['Auth'],
-
         }),
         logoutUser: builder.mutation<void, void>({
             query: () => {
@@ -73,7 +76,7 @@ const authApi = createApi({
             async onQueryStarted(_, {dispatch, queryFulfilled}) {
                 try {
                     await queryFulfilled;
-                    localStorage.removeItem('access_token');
+                    clearAuthData();
                     dispatch(setCredentials({id: '', role: 'User'}));
                 } catch (error) {
                     console.error('Logout failed:', error);
@@ -89,7 +92,7 @@ const authApi = createApi({
             providesTags: ['Auth'],
             async onQueryStarted(_, {dispatch, queryFulfilled}) {
                 await updateAccess(queryFulfilled, dispatch)
-            },
+            }
         }),
         getProfile: builder.query<UserInfoResponse, void>({
             query: () => '/users/me',
