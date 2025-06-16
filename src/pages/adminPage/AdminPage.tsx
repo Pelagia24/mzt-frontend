@@ -1,11 +1,8 @@
-import NavBar from "../../components/navBar/NavBar.tsx";
-import AdminTable from "../../components/adminTable/AdminTable.tsx";
+import { Routes, Route } from 'react-router-dom';
+import AdminLayout from "../../components/admin/AdminLayout.tsx";
 
-const AdminPage = () => (
-    <>
-        <NavBar/>
-        <AdminTable/>
-    </>
-)
+const AdminPage = () => {
+    return <AdminLayout />;
+}
 
 export default AdminPage;

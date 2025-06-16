@@ -27,12 +27,10 @@ const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1',
         credentials: 'include',
-        prepareHeaders: (headers, {endpoint}) => {
-            if (endpoint === 'refreshToken' || endpoint === 'getProfile') {
-                const token = localStorage.getItem("access_token");
-                if (token) {
-                    headers.set('Authorization', `Bearer ${token}`);
-                }
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem("access_token");
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
             }
             return headers;
         }
@@ -96,6 +94,14 @@ const authApi = createApi({
         getProfile: builder.query<UserInfoResponse, void>({
             query: () => '/users/me',
             providesTags: ['UserInfo'],
+        }),
+        updateProfile: builder.mutation<UserInfoResponse, Partial<UserInfoResponse['user']>>({
+            query: (userData) => ({
+                url: `/users/${userData.id}`,
+                method: 'PUT',
+                body: userData
+            }),
+            invalidatesTags: ['UserInfo']
         })
     }),
 });
@@ -106,6 +112,7 @@ export const {
     useLogoutUserMutation,
     useRefreshTokenQuery,
     useGetProfileQuery,
+    useUpdateProfileMutation
 } = authApi;
 
 export default authApi;
