@@ -46,7 +46,7 @@ export interface UpdateLessonRequest {
 export const courseApi = createApi({
     reducerPath: 'courseApi',
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'http://localhost:8080/api/v1',
+        baseUrl: 'https://mzt-study.ru/api/v1',
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('access_token');
             if (token) {

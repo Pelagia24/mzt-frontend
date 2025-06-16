@@ -23,7 +23,7 @@ const MainPage = () => {
                     </section>
                 </div>
                 <div className="col-12 md:col-6 overflow-hidden">
-                    <img src="/public/bg.jpg" alt="hero-1" className="md:ml-auto block"
+                    <img src="bg.jpg" alt="hero-1" className="md:ml-auto block"
                          style={{clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)', height: '80vh'}}/>
                 </div>
             </div>

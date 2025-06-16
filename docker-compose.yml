@@ -6,8 +6,6 @@ services:
   frontend:
     build: .
     container_name: frontend
-    env_file:
-      - .env
     networks:
       - app-net
     restart: unless-stopped

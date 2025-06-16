@@ -25,7 +25,7 @@ const authApi = createApi({
     reducerPath: 'api',
     tagTypes: ['Auth', 'UserInfo'],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1',
+        baseUrl: 'https://mzt-study.ru/api/v1',
         credentials: 'include',
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("access_token");
